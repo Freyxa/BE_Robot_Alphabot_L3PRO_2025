@@ -12,7 +12,7 @@ Ce projet vise à développer un système d’assistance au stationnement en mar
 L’ensemble du système illustre une intégration pratique de la modulation de largeur d’impulsion (PWM), de la détection de proximité et d’une interface visuelle simple pour une assistance intuitive en situation de recul. 
 
 ## Contenu du dépôt
-- `src/` : Code source du projet  
+- `code/` : Code source du projet  
 - `include/` : Fichiers header (si séparés du code source)  
 - `docs/` : Documentation et rapport du projet  
 - `rapport.pdf` : Compte rendu détaillé du projet  
