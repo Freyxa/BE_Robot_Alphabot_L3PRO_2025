@@ -16,6 +16,8 @@
 #define BIN1   A2         
 #define BIN2   A3   
 
+#define LED_PIN 13  // LED intégrée sur Arduino UNO
+
 volatile unsigned long start_time = 0;
 volatile unsigned long echo_time = 0;
 volatile bool new_measure = false;
@@ -46,16 +48,17 @@ void setup() {
   display.setTextSize(2);
   display.setTextColor(SSD1306_WHITE);
   
+  // ==== LED ====
+  pinMode(LED_PIN, OUTPUT);
+  
   // ==== Série ====
   Serial.begin(9600);
 }
 
 void loop() {
-  // Déclenche une mesure ultrason toutes les 100 ms
   trigger_ultrasonic();
   delay(100);
 
-  // Si une nouvelle mesure est prête
   if (new_measure) {
     noInterrupts();
     float distance_cm = (float)echo_time / 58.0;
@@ -63,6 +66,9 @@ void loop() {
     interrupts();
 
     Distance = distance_cm;
+
+    // ==== Contrôle de la LED ====
+    updateLED(Distance);
 
     // ==== Affichage OLED ====
     display.clearDisplay();
@@ -81,28 +87,71 @@ void loop() {
     display.display();
 
     // ==== Contrôle moteurs ====
-    if (Distance > 15) {
-      // Avancer
+    if (Distance > 10) {
       digitalWrite(AIN1, LOW);
       digitalWrite(AIN2, HIGH);
       digitalWrite(BIN1, LOW);
       digitalWrite(BIN2, HIGH);
     } else {
-      // Stop
       digitalWrite(AIN1, LOW);
       digitalWrite(AIN2, LOW);
       digitalWrite(BIN1, LOW);
       digitalWrite(BIN2, LOW);
     }
 
-    // ==== Debug série ====
     Serial.print("Distance: ");
     Serial.print(Distance);
     Serial.println(" cm");
   }
 }
 
-// ---- Fonction déclenchement ultrason ----
+void updateLED(float distance) {
+  static unsigned long previousMillis = 0;
+  static bool ledState = false;
+  unsigned long interval = 0;
+
+  // Éteindre par défaut
+  digitalWrite(LED_PIN, LOW);
+
+  if (distance < 2 || distance > 400) {
+    // Hors plage : éteinte
+    return;
+  }
+
+  if (distance < 20) {
+    // Moins de 20 cm : LED allumée en continu
+    digitalWrite(LED_PIN, HIGH);
+    return;
+  }
+
+  // Définir l'intervalle de clignotement selon la distance
+  if (distance >= 100) {
+    // ≥ 1 m : éteinte (ou très lent, ici éteinte)
+    return;
+  }
+  else if (distance >= 50) {
+    // 50–100 cm : lent → toutes les 800 ms
+    interval = 500;
+  }
+  else if (distance >= 30) {
+    // 30–50 cm : modéré → toutes les 400 ms
+    interval = 150;
+  }
+  else if (distance >= 20) {
+    // 20–30 cm : rapide → toutes les 150 ms
+    interval = 50;
+  }
+
+  // Clignotement non bloquant
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    ledState = !ledState;
+    digitalWrite(LED_PIN, ledState);
+  }
+}
+
+// ---- Déclenchement ultrason ----
 void trigger_ultrasonic() {
   digitalWrite(TRIG, LOW);
   delayMicroseconds(2);
@@ -111,7 +160,7 @@ void trigger_ultrasonic() {
   digitalWrite(TRIG, LOW);
 }
 
-// ---- Interruption sur front CHANGE de ECHO ----
+// ---- Interruption ECHO ----
 void echo_change() {
   if (digitalRead(ECHO) == HIGH) {
     start_time = micros();
