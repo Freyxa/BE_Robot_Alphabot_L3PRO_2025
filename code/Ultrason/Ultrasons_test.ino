@@ -50,5 +50,5 @@ void loop() {
     // Distance = 0; // ou laisser inchangée
   }
 
-  delay(60);  // Respecter le temps de repos du HC-SR04 (~50 ms recommandé)
+  delay(250);  // Respecter le temps de repos du HC-SR04
 }
