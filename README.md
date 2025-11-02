@@ -13,12 +13,12 @@ L’ensemble du système illustre une intégration pratique de la modulation de 
 
 ## Contenu du dépôt
 - `code/` : Code source du projet  
-- `include/` : Fichiers header (si séparés du code source)  
-- `docs/` : Documentation et rapport du projet  
+- `include/` : Fichiers header
+- `cpp/`: Fichiers cpp 
+- `docs/` : Documentation et datasheets
 - `rapport.pdf` : Compte rendu détaillé du projet  
-- `diagrammes.png` : Schémas et diagrammes explicatifs  
+- `mesures.png` : Observation et mesures au picoscope
 - `examples/` : Fichiers de test ou exemples d’utilisation  
-- `data/` : Données utilisées par le projet (capteurs, logs, etc.)  
 
 ## Installation
 Exemple pour un projet Arduino :
