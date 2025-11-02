@@ -15,10 +15,9 @@ L’ensemble du système illustre une intégration pratique de la modulation de 
 - `code/` : Code source du projet  
 - `include/` : Fichiers header
 - `cpp/`: Fichiers cpp 
-- `docs/` : Documentation et datasheets
-- `rapport.pdf` : Compte rendu détaillé du projet  
-- `mesures.png` : Observation et mesures au picoscope
-- `examples/` : Fichiers de test ou exemples d’utilisation  
+- `docs/` : Documentation et datasheets 
+- `mesures.png/` : Observation et mesures au picoscope
+- `simulation/` : Simulations sur proteus
 
 ## Installation
 Exemple pour un projet Arduino :
