@@ -1,7 +1,10 @@
 #define ECHO   2 // ECHO -> PIN NUMERIQUE 2    
 #define TRIG   3 // TRIG -> PIN NUMERIQUE 3  
 
-int Distance = 0; // Initialisation de Distance à 0
+int Distance = 0;           // Distance actuelle (en cm)
+int DistanceFiltree = 0;    // Distance lissée (filtrée)
+const float alpha = 0.3;    // Coefficient de filtrage (0.1 = très stable / 1 = brut)
+
 
 int Distance_test()         // Fonction pour mesurer la distance
 {
@@ -24,16 +27,18 @@ void setup()
 
 void loop()
 {
-  Distance = Distance_test();                 // Distance à afficher 
-  if((2 < Distance) && (Distance < 400))      // Plage de mesure ultrasonique : de 2 cm à 400 cm
-  {
-    Serial.print("Distance = ");            // Afficher valeur de la distance en cm
-    Serial.print(Distance);       
-    Serial.println("cm");       
+  int mesure = Distance_test();
+
+  // Filtrage de la mesure
+  if (mesure > 0 && mesure <= 400) {
+    DistanceFiltree = (int)(alpha * mesure + (1 - alpha) * DistanceFiltree);
   }
-  else
-  {
-    Serial.println("Hors de portée!");      
-  }
-  delay(250);
+
+  // Mise à jour de la distance
+  Distance = DistanceFiltree;
+
+  // Affichage dans le moniteur série
+  Serial.print("Distance filtrée = ");
+  Serial.print(Distance);
+  Serial.println(" cm");
 }
