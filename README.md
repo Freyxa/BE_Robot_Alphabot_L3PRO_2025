@@ -16,7 +16,7 @@ L’ensemble du système illustre une intégration pratique de la modulation de 
 - `include/` : Fichiers header
 - `cpp/`: Fichiers cpp 
 - `docs/` : Documentation et datasheets 
-- `mesures.png/` : Observation et mesures au picoscope
+- `mesures/` : Observation et mesures au picoscope
 - `simulation/` : Simulations sur proteus
 
 ## Installation
