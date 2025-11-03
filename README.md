@@ -22,6 +22,6 @@ L’ensemble du système illustre une intégration pratique de la modulation de 
 ## Installation
 Exemple pour un projet Arduino :
 1. Installer l’IDE Arduino  
-2. Ouvrir le fichier `code/[...].ino`  
+2. Ouvrir le fichier `code/[...].ino` (inclure fichier .h et .cpp dans certains cas)
 3. Compiler et téléverser sur la carte  
 
