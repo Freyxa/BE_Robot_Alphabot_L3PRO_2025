@@ -1,0 +1,90 @@
+#include "TRSensors.h"
+
+#define PWMA   6
+#define AIN2   A0
+#define AIN1   A1
+#define PWMB   5
+#define BIN1   A2
+#define BIN2   A3
+
+#define NUM_SENSORS 5
+#define VITESSE 50
+#define SEUIL 600   // à ajuster après test
+
+TRSensors trs;
+unsigned int sensorValues[NUM_SENSORS];
+
+void avancer() {
+  digitalWrite(AIN1, LOW);  digitalWrite(AIN2, HIGH);
+  digitalWrite(BIN1, LOW);  digitalWrite(BIN2, HIGH);
+  analogWrite(PWMA, VITESSE);
+  analogWrite(PWMB, VITESSE);
+}
+
+void tournerGauche() {
+  digitalWrite(AIN1, LOW);  digitalWrite(AIN2, LOW);
+  digitalWrite(BIN1, LOW);  digitalWrite(BIN2, HIGH);
+  analogWrite(PWMA, 0);
+  analogWrite(PWMB, VITESSE);
+}
+
+void tournerDroite() {
+  digitalWrite(AIN1, LOW);  digitalWrite(AIN2, HIGH);
+  digitalWrite(BIN1, LOW);  digitalWrite(BIN2, LOW);
+  analogWrite(PWMA, VITESSE);
+  analogWrite(PWMB, 0);
+}
+
+void arret() {
+  analogWrite(PWMA, 0);
+  analogWrite(PWMB, 0);
+}
+
+void setup() {
+  pinMode(PWMA, OUTPUT);
+  pinMode(AIN1, OUTPUT);
+  pinMode(AIN2, OUTPUT);
+  pinMode(PWMB, OUTPUT);
+  pinMode(BIN1, OUTPUT);
+  pinMode(BIN2, OUTPUT);
+
+  Serial.begin(9600);
+
+  
+
+
+  // Calibration
+  for (int i = 0; i < 100; i++) {
+    trs.calibrate();
+    delay(20);
+  }
+}
+
+void loop() {
+  trs.readLine(sensorValues);
+
+  int g = sensorValues[0]; // IR1
+  int d = sensorValues[4]; // IR5
+
+  bool noirG = g > SEUIL;
+  bool noirD = d > SEUIL;
+
+  Serial.print(g);
+  Serial.print(" | ");
+  Serial.println(d);
+
+  if (!noirG && !noirD) {
+    avancer();
+  }
+  else if (noirG && !noirD) {
+    tournerGauche();
+  }
+  else if (!noirG && noirD) {
+    tournerDroite();
+  }
+  else {
+    arret();
+  }
+
+  delay(10);
+}
