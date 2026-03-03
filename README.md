@@ -1,4 +1,4 @@
-# BE  Minirobot L3 pro
+# BE  Minirobot L3 pro (Compte-rendu complet: https://pinto-passenger-7e9.notion.site/BE-Minirobot-L3-pro-2b58e55cacd6813eb711e8587262c23e)
 
 ## L3 pro 2025 Instrumentation embarquée (≥150h)
 
